@@ -1,8 +1,11 @@
 import express from "express";
+import type { Express } from "express";
 import morgan from "morgan";
 import cors from "cors";
 import route from "./routes/route";
-import type { RequestHandler } from "express";
+
+const app: Express = express();
+const port = Bun.env.PORT;
 
 declare module "bun" {
   interface Env {
@@ -10,13 +13,11 @@ declare module "bun" {
   }
 }
 
-const app = express();
-const port = Bun.env.PORT;
-
+//logger
+app.use(morgan("dev"));
+app.use(express.urlencoded({ extended: true }));
 app.use(express.json());
-app.use(morgan("dev")); //Logging
 
-//CORS Settings
 app.use(
   "*",
   cors({
@@ -32,5 +33,5 @@ app.use(
 app.use("/", route);
 
 app.listen(port, () => {
-  console.log(`Listening on port ${port}...`);
+  console.log(`Example app listening at http://localhost:${port}`);
 });
